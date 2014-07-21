@@ -4,7 +4,7 @@
     <script type="text/javascript">
        var module = angular.module("customAPP",[]);
         angular.element(document).ready(function(){
-            angular.bootstrap(document.getElementById('custom-id'),['customAPP'])  ;
+            angular.bootstrap(document.getElementById('custom-id'),['customAPP']);
         });
 
         module.config(function($interpolateProvider){
@@ -14,6 +14,14 @@
         });
 
         module.controller('ItemController',function($scope,$http){
+
+            // Pagination
+            $scope.currentPage = 0;
+            $scope.pageSize = 10;
+            $scope.numberOfPages=function(){
+                return Math.ceil((($scope.items)?$scope.items.length:0)/$scope.pageSize);
+            }
+
             // Loading all items while loading page
             $http({method:'GET',url: '{{path('project_common_itemsApi')}}'}).success(function(data){
                $scope.items = data;
@@ -37,6 +45,14 @@
                         });
             }
         });
+
+       module.filter('startFrom', function() {
+           return function(input,start) {
+               if(input != undefined){
+                   return input.slice(start);
+               }
+           }
+       });
     </script>
 {% endblock %}
 {% block bodycontent %}
@@ -48,9 +64,10 @@
                     <div><input type="text" ng-model="itemName" placeholder="Item Name"></div>
                     <div><input type="text" ng-model="price" placeholder="Price"></div>
                     <button ng-click="addItem();">Add Item</button>
-                </form>
+                </div>
             </div>
             <div>
+                <div>Total No of Items: % items.length %</div>
                 <table>
                     <thead>
                     <tr>
@@ -59,13 +76,23 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="item in items">
+                    <tr ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td> % item.name %</td>
                         <td> % item.price %</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+            <div>
+                <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                    Previous
+                </button>
+                % currentPage+1 % / % numberOfPages() %
+                <button ng-disabled="currentPage >= items.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                    Next
+                </button>
+            </div>
+
         </div>
    </div>
 {% endblock %}
