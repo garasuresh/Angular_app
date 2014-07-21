@@ -1,0 +1,16 @@
+project_common_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: ProjectCommonBundle:Default:index }
+
+project_common_items:
+    path:    /items
+    defaults: { _controller: ProjectCommonBundle:Item:items }
+
+project_common_itemsApi:
+    path:    /api/items
+    defaults: { _controller: ProjectCommonBundle:Item:itemsApi }
+
+project_common_addItemApi:
+    path:    /api/post/item
+    defaults: { _controller: ProjectCommonBundle:Item:addItemApi }
+    methods:  [POST]

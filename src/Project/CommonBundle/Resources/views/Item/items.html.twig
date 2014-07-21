@@ -1,0 +1,71 @@
+{% extends "ProjectCommonBundle::layout.html.twig" %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+       var module = angular.module("customAPP",[]);
+        angular.element(document).ready(function(){
+            angular.bootstrap(document.getElementById('custom-id'),['customAPP'])  ;
+        });
+
+        module.config(function($interpolateProvider){
+            $interpolateProvider.startSymbol('%');
+            $interpolateProvider.endSymbol('%');
+
+        });
+
+        module.controller('ItemController',function($scope,$http){
+            // Loading all items while loading page
+            $http({method:'GET',url: '{{path('project_common_itemsApi')}}'}).success(function(data){
+               $scope.items = data;
+            });
+
+            // Adding item
+            $scope.addItem = function(){
+                var formData = { name: $scope.itemName , price: $scope.price };
+                $http({
+                    method: 'POST',
+                    url: '{{path('project_common_addItemApi')}}',
+                    data: formData }).
+                        success(function(data, status, headers, config) {
+                            angular.forEach(data, function(value,key){
+                                $scope.items.push(value);
+                            });
+                        }).
+                        error(function(data, status, headers, config) {
+                            // called asynchronously if an error occurs
+                            // or server returns response with an error status.
+                        });
+            }
+        });
+    </script>
+{% endblock %}
+{% block bodycontent %}
+    <div><h1>Items List</h1></div>
+    <div id="custom-id">
+        <div ng-controller="ItemController">
+            <div class="form">
+                <div class="post-item">
+                    <div><input type="text" ng-model="itemName" placeholder="Item Name"></div>
+                    <div><input type="text" ng-model="price" placeholder="Price"></div>
+                    <button ng-click="addItem();">Add Item</button>
+                </form>
+            </div>
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Item Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in items">
+                        <td> % item.name %</td>
+                        <td> % item.price %</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+   </div>
+{% endblock %}
