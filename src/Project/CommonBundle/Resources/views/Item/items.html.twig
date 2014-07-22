@@ -1,59 +1,7 @@
 {% extends "ProjectCommonBundle::layout.html.twig" %}
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-       var module = angular.module("customAPP",[]);
-        angular.element(document).ready(function(){
-            angular.bootstrap(document.getElementById('custom-id'),['customAPP']);
-        });
-
-        module.config(function($interpolateProvider){
-            $interpolateProvider.startSymbol('%');
-            $interpolateProvider.endSymbol('%');
-
-        });
-
-        module.controller('ItemController',function($scope,$http){
-
-            // Pagination
-            $scope.currentPage = 0;
-            $scope.pageSize = 10;
-            $scope.numberOfPages=function(){
-                return Math.ceil((($scope.items)?$scope.items.length:0)/$scope.pageSize);
-            }
-
-            // Loading all items while loading page
-            $http({method:'GET',url: '{{path('project_common_itemsApi')}}'}).success(function(data){
-               $scope.items = data;
-            });
-
-            // Adding item
-            $scope.addItem = function(){
-                var formData = { name: $scope.itemName , price: $scope.price };
-                $http({
-                    method: 'POST',
-                    url: '{{path('project_common_addItemApi')}}',
-                    data: formData }).
-                        success(function(data, status, headers, config) {
-                            angular.forEach(data, function(value,key){
-                                $scope.items.push(value);
-                            });
-                        }).
-                        error(function(data, status, headers, config) {
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                        });
-            }
-        });
-
-       module.filter('startFrom', function() {
-           return function(input,start) {
-               if(input != undefined){
-                   return input.slice(start);
-               }
-           }
-       });
-    </script>
+    <script src="{{ asset('bundles/projectcommon/js/project/item.js') }}"></script>
 {% endblock %}
 {% block bodycontent %}
     <div><h1>Items List</h1></div>
@@ -62,7 +10,7 @@
             <div class="form">
                 <div class="post-item">
                     <div><input type="text" ng-model="itemName" placeholder="Item Name"></div>
-                    <div><input type="text" ng-model="price" placeholder="Price"></div>
+                    <div><input type="number" ng-model="price" placeholder="Price"></div>
                     <button ng-click="addItem();">Add Item</button>
                 </div>
             </div>
