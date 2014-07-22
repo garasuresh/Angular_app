@@ -78,7 +78,7 @@
                     <tbody>
                     <tr ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize">
                         <td> % item.name %</td>
-                        <td> % item.price %</td>
+                        <td> % item.price | currency:"&#x20B9;" %</td>
                     </tr>
                     </tbody>
                 </table>
