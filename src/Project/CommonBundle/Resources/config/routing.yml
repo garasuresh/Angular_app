@@ -14,3 +14,8 @@ project_common_addItemApi:
     path:    /api/post/item
     defaults: { _controller: ProjectCommonBundle:Item:addItemApi }
     methods:  [POST]
+
+project_common_removeItemApi:
+    path:    /api/item/remove/{id}
+    defaults: { _controller: ProjectCommonBundle:Item:removeItem }
+    methods:  [GET]

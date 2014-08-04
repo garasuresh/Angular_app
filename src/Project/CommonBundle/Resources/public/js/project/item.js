@@ -41,12 +41,26 @@ module.controller('ItemController',function($scope,$http){
             success(function(data, status, headers, config) {
                 angular.forEach(data, function(value){
                     $scope.items.push(value);
+                    $scope.itemName = '';
+                    $scope.price = '';
                 });
             }).
             error(function(data, status, headers, config) {
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
             });
+    }
+
+    $scope.removeItem = function(id,index){
+        $http({
+            method: 'GET',
+            url: '/api/item/remove/'+id }).
+            success( function (response) {
+                    if(response == 'success'){
+                        var itemsArray = $scope.items;
+                        itemsArray.splice(index,1);
+                    }
+            })
     }
 });
 

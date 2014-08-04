@@ -19,14 +19,18 @@
                 <table>
                     <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Item Name</th>
                         <th>Item Price</th>
+                        <th> Action </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="item in items | startFrom:currentPage*pageSize | limitTo:pageSize">
+                        <td> % item.id %</td>
                         <td> % item.name %</td>
                         <td> % item.price | currency:"&#x20B9;" %</td>
+                        <td> <span ng-click="removeItem(item.id, $index)">Remove</span> </td>
                     </tr>
                     </tbody>
                 </table>
